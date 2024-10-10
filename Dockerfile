@@ -17,7 +17,7 @@ COPY ./Datos_parquet /app/Datos_parquet
 
 # Instala las dependencias
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt --timeout 100
 
 # Expone el puerto 8000 para FastAPI
 EXPOSE 8000

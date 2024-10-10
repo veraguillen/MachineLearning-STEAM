@@ -1,7 +1,6 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from Utils.Funciones import (
-    procesar_datos,
     developer,
     userdata,
     UserForGenre,
@@ -19,14 +18,6 @@ app = FastAPI()
 def read_root():
     return {"message": "Hello, World!"}
 
-# Cargar los datasets
-#df_games = cargar_data1()
-#df_reviews = cargar_data2()
-#df_items = cargar_data3()
-
-# Verifica que los DataFrames se hayan cargado correctamente
-if df_games is None or df_reviews is None or df_items is None:
-    raise RuntimeError("Error al cargar los datos, asegúrate de que los archivos existan y sean accesibles.")
 
 class DeveloperQuery(BaseModel):
     desarrollador: str
@@ -111,9 +102,7 @@ async def recommend_games_post(game_request: GameRequest):
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
 
+# Iniciar la aplicación en el puerto 8000
 if __name__ == "__main__":
-    procesar_datos()  # Puedes mantener esto si es necesario
-
-    # Iniciar la aplicación en el puerto 8000
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8000)
