@@ -1,27 +1,17 @@
-import pandas as pd
 import os
+import pandas as pd
 
-def cargar_data1():
-    ruta = r"C:\Users\veram\OneDrive\Escritorio\proyecto octubre\Datos parquet\data_games.parquet"
-    return cargar_datos(ruta)
-
-def cargar_data2():
-    ruta = r"C:\Users\veram\OneDrive\Escritorio\proyecto octubre\Datos parquet\data_review_user.parquet"
-    return cargar_datos(ruta)
-
-def cargar_data3():
-    ruta = r"C:\Users\veram\OneDrive\Escritorio\proyecto octubre\Datos parquet\data_items.parquet"
-    return cargar_datos(ruta)
-
-def cargar_datos(ruta):
-    """Función auxiliar para cargar archivos parquet y manejar errores."""
-    if os.path.exists(ruta):
+def cargar_datos_parquet(filepath):
+    """
+    Carga un archivo .parquet si existe, de lo contrario, muestra un mensaje de advertencia.
+    """
+    if os.path.exists(filepath):
         try:
-            df = pd.read_parquet(ruta)
-            return df
+            data = pd.read_parquet(filepath)
+            print(f"Archivo {filepath} cargado con éxito.")
+            return data
         except Exception as e:
-            print(f"Error al cargar {ruta}: {e}")
-            return None
+            print(f"Error al cargar el archivo {filepath}: {e}")
     else:
-        print(f"El archivo {ruta} no existe.")
-        return None
+        print(f"El archivo {filepath} no existe.")
+    return None

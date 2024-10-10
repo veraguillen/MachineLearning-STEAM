@@ -1,15 +1,21 @@
+from Utils.Carga_data import cargar_datos_parquet
 import pandas as pd
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
-from Utils.Carga_data import cargar_data1, cargar_data2, cargar_data3
 import numpy as np
 
 
+# Definir las rutas de los archivos .parquet
+ruta_data_games = r'Datos_parquet/data_games.parquet'
+ruta_data_review_user = r'Datos_parquet/data_review_user.parquet'
+ruta_data_items = r'Datos_parquet/data_items.parquet'
 
-# Cargar los datasets
-df_games = cargar_data1()
-df_review = cargar_data2()
-df_items = cargar_data3()
+# Cargar los archivos utilizando la función desde utils
+df_games = cargar_datos_parquet(ruta_data_games)
+df_reviews = cargar_datos_parquet(ruta_data_review_user)
+df_items = cargar_datos_parquet(ruta_data_items)
+
+
 
 def developer(desarrollador: str, df_games: pd.DataFrame):
     # Validar que df_games sea un DataFrame
