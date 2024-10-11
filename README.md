@@ -1,4 +1,4 @@
-# Sistema de Recomendación de Videojuegos 
+# Sistema de Recomendación de Videojuegos/STEAM/HENRY
 
 
 ## Tabla de Contenidos
@@ -74,15 +74,15 @@ Accede a [http://localhost:8000/docs](http://localhost:8000/docs) para la docume
 
 ## Análisis Exploratorio de Datos (EDA)
 
-Realiza un EDA para entender mejor la distribución y relaciones en el dataset, que incluirá:
+Cuenta con un EDA para entender mejor la distribución y relaciones en el dataset, que incluye:
 
 - Visualizaciones de la distribución de géneros.
 - Análisis de la cantidad de reseñas y su correlación con las calificaciones.
-- Identificación de patrones que informen el desarrollo del modelo.
+- Identificación de patrones para el desarrollo del modelo.
 
 ## Desarrollo de la API
 
-La API, desarrollada con FastAPI, permiten realizar diversas consultas sobre los datos.  
+La API, esta desarrollada con FastAPI, y permiten realizar diversas consultas sobre los datos.  
 
 ### EJEMPLO:
 
@@ -101,11 +101,11 @@ La API, desarrollada con FastAPI, permiten realizar diversas consultas sobre los
 
 ## Modelo de Machine Learning
 
-Se implementa un modelo de recomendación utilizando **similitud del coseno**, midiendo cuán similares son las características de los videojuegos. El modelo toma como entrada el nombre de un juego y devuelve una lista de 5 recomendaciones similares.
+Se implementa un modelo de recomendación utilizando **similitud del coseno**, midiendo cuán similares son las características de los videojuegos. El modelo toma como entrada el nombre de un videojuego y devuelve una lista de 5 recomendaciones similares.
 
 ### Entrenamiento del Modelo
 
-Se entrena con un conjunto de datos que incluye:
+Se entrenó con un conjunto de datos que incluye:
 
 - **Género:** Categorías de cada videojuego.
 - **Price:** precio de cada videojuego.
