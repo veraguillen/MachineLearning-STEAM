@@ -1,10 +1,9 @@
 import os
 import pandas as pd
 
+# La funcion carga un archivo .parquet si existe, de lo contrario, muestra un mensaje de advertencia.
 def cargar_datos_parquet(filepath):
-    """
-    Carga un archivo .parquet si existe, de lo contrario, muestra un mensaje de advertencia.
-    """
+
     if os.path.exists(filepath):
         try:
             data = pd.read_parquet(filepath)

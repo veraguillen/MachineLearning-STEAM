@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 
 class DeveloperQuery(BaseModel):
-    desarrollador: str  # Mantener el nombre correcto de la propiedad
+    desarrollador: str  
 
 
 class UserDataQuery(BaseModel):
@@ -16,7 +16,5 @@ class YearQuery(BaseModel):
     año: int
 
 
-
-# Clase para recibir el cuerpo de la solicitud POST
 class GameRequest(BaseModel):
     game_title: str
