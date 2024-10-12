@@ -1,7 +1,7 @@
-# Sistema de Recomendación de Videojuegos/STEAM/HENRY
+# Sistema de Recomendación de Videojuegos/ #steam/ # HENRY
 
 
-## Tabla de Contenidos
+### Tabla de Contenidos
 
 - [Descripción](#descripción)
 - [Funcionalidades](#funcionalidades)
@@ -68,11 +68,11 @@ Sigue estos pasos para instalar y configurar el proyecto en tu máquina local:
     uvicorn main:app --reload
     ```
 
-## Uso de la Aplicación
+### Uso de la Aplicación
 
 Accede a [http://localhost:8000/docs](http://localhost:8000/docs) para la documentación interactiva de la API. 🖥️
 
-## Análisis Exploratorio de Datos (EDA)
+### Análisis Exploratorio de Datos (EDA)
 
 Cuenta con un EDA para entender mejor la distribución y relaciones en el dataset, que incluye:
 
@@ -80,11 +80,11 @@ Cuenta con un EDA para entender mejor la distribución y relaciones en el datase
 - Análisis de la cantidad de reseñas y su correlación con las calificaciones.
 - Identificación de patrones para el desarrollo del modelo.
 
-## Desarrollo de la API
+### Desarrollo de la API
 
 La API, esta desarrollada con FastAPI, y permiten realizar diversas consultas sobre los datos.  
 
-### EJEMPLO:
+#### EJEMPLO:
 
 1. **Cantidad de Items y Contenido Free por Año según Desarrolladora**
    - **Método:** `GET`
@@ -107,7 +107,7 @@ Se implementa un modelo de recomendación utilizando **similitud del coseno**, m
 
 Se entrenó con un conjunto de datos que incluye:
 
-- **Género:** Categorías de cada videojuego.
+- ***Género:*** Categorías de cada videojuego.
 - **Price:** precio de cada videojuego.
 - **Specs:** Especificaciones de los videojuegos.
 
@@ -119,13 +119,14 @@ La funcionalidad de recomendación se implementa a través de un endpoint que pe
 
 
 
-## Despliegue
+### Despliegue
 
 El proyecto está configurado para ser desplegado en **Render** utilizando un contenedor de **Docker**. Asegúrate de tener Docker instalado y configurado en tu entorno. 
 
 
-## Contribuciones:
+### Contribuciones:
 Si deseas contribuir a este proyecto, siéntete libre de hacer un fork y enviar un pull request.
 
 
-
+###Autores
+Vera Guillén - Contacto: LinkedIn.

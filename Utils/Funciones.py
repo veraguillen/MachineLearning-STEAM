@@ -18,7 +18,7 @@ df_items = cargar_datos_parquet(ruta_data_items)
 
 
 def developer(desarrollador: str, df_games: pd.DataFrame):
-    # Validamos que df_games sea un DataFrame
+    # Validamos que df_games sea un dataframe
     if not isinstance(df_games, pd.DataFrame):
         raise ValueError("El argumento df_games debe ser un DataFrame de pandas.")
     

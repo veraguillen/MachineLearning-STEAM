@@ -18,10 +18,11 @@ app = FastAPI()
 def read_root():
     return {"message": "Hello, World!"}
 
+#Endpoint 
 
 class DeveloperQuery(BaseModel):
     desarrollador: str
-
+#Definimos la funcion para fastApi 
 @app.get("/developer/", response_model=List[Dict])
 async def get_developer_info(desarrollador: str):  
     try:
