@@ -1,4 +1,4 @@
-# Sistema de Recomendación de Videojuegos/ #steam/ # HENRY
+## Sistema de Recomendación de Videojuegos/steam/HENRY
 
 
 ### Tabla de Contenidos
