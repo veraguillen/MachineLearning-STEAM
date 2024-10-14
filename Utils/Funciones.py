@@ -251,11 +251,11 @@ def developer_reviews_analysis(desarrolladora: str, df_reviews: pd.DataFrame, df
 
 
 # Verificamos nuevamente que la columna combined_features no tenga valores nulos
-df_games = df_games.dropna(subset=['combined_features'])
+df_games = df_games.dropna(subset=['combined'])
 
 # Inicializamos el vectorizador y la matriz TF-IDF para el modelo 
 vectorizer = TfidfVectorizer(stop_words='english')
-tfidf_matrix = vectorizer.fit_transform(df_games['combined_features'])
+tfidf_matrix = vectorizer.fit_transform(df_games['combined'])
 
 
 
