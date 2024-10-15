@@ -1,3 +1,4 @@
+import pandas as pd
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from Utils.Funciones import (
@@ -40,9 +41,10 @@ def get_userdata(user_id: str, df_items: pd.DataFrame, df_reviews: pd.DataFrame,
         result = userdata(user_id, df_items, df_reviews, df_games)
         return result
     except ValueError as e:
-        raise HTTPException(status_code=400, detail=str(e))  
+        raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail="Error interno del servidor")
+    
 
 @app.get("/user-for-genre/", response_model=dict)
 async def get_user_for_genre(genero: str):  
