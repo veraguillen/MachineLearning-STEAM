@@ -55,69 +55,43 @@ def developer(desarrollador: str, df_games: pd.DataFrame):
 
 
 
-class UserDataError(Exception):
-    pass
 
 def userdata(user_id: str, df_items: pd.DataFrame, df_reviews: pd.DataFrame, df_games: pd.DataFrame):
-    try:
-        # Validación de DataFrames vacíos
-        for df, name in zip([df_items, df_reviews, df_games], ['df_items', 'df_reviews', 'df_games']):
-            if df.empty:
-                raise ValueError(f"El DataFrame {name} está vacío.")
-        
-        # Usar una expresión regular para buscar el user_id, permitiendo mezcla de letras, números y símbolos
-        user_pattern = re.compile(re.escape(user_id), re.IGNORECASE)
-        
-        # Filtramos los datos por el usuario dado en df_items y df_reviews
-        items_usuario = df_items[df_items['user_id'].str.contains(user_pattern, na=False)]
-        reviews_usuario = df_reviews[df_reviews['user_id'].str.contains(user_pattern, na=False)]
+    # Filtramos los datos por el usuario dado
+    items_usuario = df_items[df_items['user_id'] == user_id]
+    reviews_usuario = df_reviews[df_reviews['user_id'] == user_id]
 
-        # Verificamos si hay datos de ítems
-        if items_usuario.empty:
-            return {
-                "Usuario": user_id,
-                'Dinero gastado': "$0.00",
-                '% de recomendación': '0.00%',
-                'cantidad de items': 0
-            }
-
-        # Combinamos con df_games para obtener precios
-        items_con_precios = items_usuario.merge(df_games[['id', 'price', 'is_free']], left_on='item_id', right_on='id', how='left')
-
-        # Verificamos el merge
-        if items_con_precios.empty:
-            return {
-                "Usuario": user_id,
-                'Dinero gastado': "$0.00",
-                '% de recomendación': '0.00%',
-                'cantidad de items': 0
-            }
-        
-        # Calculamos el dinero gastado
-        dinero_gastado = items_con_precios[items_con_precios['is_free'] == False]['price'].sum()
-        dinero_gastado_formateado = f"USD {dinero_gastado:,.2f}"
-        
-        # Total de ítems
-        total_items = len(items_usuario)
-
-        # Calculamos el porcentaje de recomendación
-        if len(reviews_usuario) > 0:
-            porcentaje_recomendacion = (reviews_usuario['recommend'].sum() / len(reviews_usuario)) * 100
-        else:
-            porcentaje_recomendacion = 0  # Si no hay reseñas, el porcentaje es 0
-
+    # Verificamos si hay datos de ítems
+    if items_usuario.empty:
         return {
             "Usuario": user_id,
-            'Dinero gastado': dinero_gastado_formateado,
-            'Porcentaje de recomendación': f"{porcentaje_recomendacion:.2f}%",
-            'cantidad de items': total_items
+            'Dinero gastado': "$0.00",
+            '% de recomendación': '0.00%',
+            'cantidad de items': 0
         }
-    except ValueError as ve:
-        raise HTTPException(status_code=400, detail=str(ve))
-    except Exception as e:
-        # Imprimir la excepción para depuración
-        print(f"Error interno: {e}")
-        raise HTTPException(status_code=500, detail="Error interno del servidor")
+
+    # Combinamos con df_games para obtener precios
+    items_con_precios = items_usuario.merge(df_games[['id', 'price', 'is_free']], left_on='item_id', right_on='id', how='left')
+
+    # Calculamos el dinero gastado
+    dinero_gastado = items_con_precios[items_con_precios['is_free'] == False]['price'].sum()
+    dinero_gastado_formateado = f"USD {dinero_gastado:,.2f}"
+
+    # Total de ítems
+    total_items = len(items_usuario)
+
+    # Calculamos el porcentaje de recomendación
+    if len(reviews_usuario) > 0:
+        porcentaje_recomendacion = (reviews_usuario['recommend'].sum() / len(reviews_usuario)) * 100
+    else:
+        porcentaje_recomendacion = 0  # Si no hay reseñas, el porcentaje es 0
+
+    return {
+        "Usuario": user_id,
+        'Dinero gastado': dinero_gastado_formateado,
+        'Porcentaje de recomendación': f"{porcentaje_recomendacion:.2f}%",
+        'cantidad de items': total_items
+    }
 
 
 

@@ -23,6 +23,8 @@ def read_root():
 
 class DeveloperQuery(BaseModel):
     desarrollador: str
+
+
 #Definimos la funcion para fastApi 
 @app.get("/developer/", response_model=List[Dict])
 async def get_developer_info(desarrollador: str):  
@@ -35,15 +37,24 @@ async def get_developer_info(desarrollador: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+from fastapi import FastAPI, HTTPException
+import pandas as pd
+
+
+
 @app.get("/userdata/")
-def get_userdata(user_id: str, df_items: pd.DataFrame, df_reviews: pd.DataFrame, df_games: pd.DataFrame):
+def get_userdata(user_id: str):
     try:
+        # Llamamos a la función userdata con el user_id y DataFrames predefinidos
         result = userdata(user_id, df_items, df_reviews, df_games)
         return result
+
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail="Error interno del servidor")
+
+
     
 
 @app.get("/user-for-genre/", response_model=dict)
