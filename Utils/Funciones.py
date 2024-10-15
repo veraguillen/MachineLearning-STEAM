@@ -4,7 +4,7 @@ from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.feature_extraction.text import TfidfVectorizer
 import numpy as np
 from fastapi import HTTPException
-
+import re
 
 # Definimos las rutas de los archivos .parquet
 ruta_data_games = r'Datos_parquet/data_games.parquet'
@@ -56,10 +56,7 @@ def developer(desarrollador: str, df_games: pd.DataFrame):
 
 
 class UserDataError(Exception):
-    
     pass
-
-
 
 def userdata(user_id: str, df_items: pd.DataFrame, df_reviews: pd.DataFrame, df_games: pd.DataFrame):
     try:
@@ -68,14 +65,17 @@ def userdata(user_id: str, df_items: pd.DataFrame, df_reviews: pd.DataFrame, df_
             if df.empty:
                 raise ValueError(f"El DataFrame {name} está vacío.")
         
-        # Filtramos los datos por el usuario dado
-        items_usuario = df_items[df_items['user_id'] == user_id]
-        reviews_usuario = df_reviews[df_reviews['user_id'] == user_id]
+        # Usar una expresión regular para buscar el user_id, permitiendo mezcla de letras, números y símbolos
+        user_pattern = re.compile(re.escape(user_id), re.IGNORECASE)
+        
+        # Filtramos los datos por el usuario dado en df_items y df_reviews
+        items_usuario = df_items[df_items['user_id'].str.contains(user_pattern, na=False)]
+        reviews_usuario = df_reviews[df_reviews['user_id'].str.contains(user_pattern, na=False)]
 
         # Verificamos si hay datos de ítems
         if items_usuario.empty:
             return {
-                f"Usuario": user_id,
+                "Usuario": user_id,
                 'Dinero gastado': "$0.00",
                 '% de recomendación': '0.00%',
                 'cantidad de items': 0
@@ -118,7 +118,6 @@ def userdata(user_id: str, df_items: pd.DataFrame, df_reviews: pd.DataFrame, df_
         # Imprimir la excepción para depuración
         print(f"Error interno: {e}")
         raise HTTPException(status_code=500, detail="Error interno del servidor")
-
 
 
 
@@ -255,11 +254,11 @@ def developer_reviews_analysis(desarrolladora: str, df_reviews: pd.DataFrame, df
 
 
 # Verificamos nuevamente que la columna combined_features no tenga valores nulos
-df_games = df_games.dropna(subset=['combined'])
+df_games = df_games.dropna(subset=['combined_features'])
 
 # Inicializamos el vectorizador y la matriz TF-IDF para el modelo 
 vectorizer = TfidfVectorizer(stop_words='english')
-tfidf_matrix = vectorizer.fit_transform(df_games['combined'])
+tfidf_matrix = vectorizer.fit_transform(df_games['combined_features'])
 
 
 
@@ -268,7 +267,7 @@ def get_index_from_title(game_title, df_games):
     game_title = game_title.lower().strip()
     
     # Buscamos el índice del juego cuyo título coincide con game_title
-    indices = df_games[df_games['app_name'].str.lower() == game_title].index
+    indices = df_games[df_games['title'].str.lower() == game_title].index
     
     # Verificamos si hay coincidencias
     if not indices.empty:
@@ -292,7 +291,7 @@ def get_recommendations(game_title, df_games):
         game_indices = [i[0] for i in sim_scores[1:6]]
         
         # Devolvemos los nombres de los videojuegos recomendados
-        return df_games['app_name'].iloc[game_indices].tolist()
+        return df_games['title'].iloc[game_indices].tolist()
     # manejo de errores
     except ValueError:
         return ["No se encontró el videojuego en los datos"]
