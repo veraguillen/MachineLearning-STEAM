@@ -34,15 +34,15 @@ async def get_developer_info(desarrollador: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
-@app.get("/userdata/", response_model=dict)
-async def get_user_data(user_id: str):  
+@app.get("/userdata/")
+def get_userdata(user_id: str, df_items: pd.DataFrame, df_reviews: pd.DataFrame, df_games: pd.DataFrame):
     try:
-        user_data = userdata(user_id, df_items, df_reviews, df_games)
-        if user_data['cantidad de items'] == 0:
-            raise HTTPException(status_code=404, detail=f"No se encontraron datos para el usuario {user_id}")
-        return user_data
+        result = userdata(user_id, df_items, df_reviews, df_games)
+        return result
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))  
     except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+        raise HTTPException(status_code=500, detail="Error interno del servidor")
 
 @app.get("/user-for-genre/", response_model=dict)
 async def get_user_for_genre(genero: str):  
