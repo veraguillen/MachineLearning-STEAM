@@ -62,27 +62,27 @@ def userdata(user_id: str, df_items: pd.DataFrame, df_reviews: pd.DataFrame, df_
     # Validamos que los DataFrames no estén vacíos
     for df, name in zip([df_items, df_reviews, df_games], ['df_items', 'df_reviews', 'df_games']):
         if df.empty:
-            raise UserDataError(f"El DataFrame {name} está vacío.")
+            raise ValueError(f"El DataFrame {name} está vacío.")
     
     # Filtramos los datos por el usuario dado
     items_usuario = df_items[df_items['user_id'] == user_id]
     reviews_usuario = df_reviews[df_reviews['user_id'] == user_id]
     
-    # Comprobamos si los datos de ítems están vacíos
+    # Comprobamos si los datos de ítems del usuario están vacíos
     if items_usuario.empty:
         return {
-            f"Usuario": user_id,
+            "Usuario": user_id,
             'Dinero gastado': "$0.00",
             '% de recomendación': '0.00%',
-            'cantidad de items': 0
+            'Cantidad de items': 0
         }
 
-    # Comprobamos si los datos de reseñas están vacíos
-    if reviews_usuario.empty:
-        pass  # Si no hay reseñas, se continúa sin hacer nada.
-
     # Combinamos con el dataset de juegos para obtener precios
-    items_con_precios = items_usuario.merge(df_games[['id', 'price', 'is_free']], left_on='item_id', right_on='id', how='left')
+    items_con_precios = items_usuario.merge(
+        df_games[['id', 'price', 'is_free']], 
+        left_on='item_id', right_on='id', 
+        how='left'
+    )
     
     # Verificamos que el merge se hizo correctamente y que hay datos
     if items_con_precios.empty:
@@ -90,20 +90,21 @@ def userdata(user_id: str, df_items: pd.DataFrame, df_reviews: pd.DataFrame, df_
             "Usuario": user_id,
             'Dinero gastado': "$0.00",
             '% de recomendación': '0.00%',
-            'cantidad de items': 0
+            'Cantidad de items': 0
         }
+    
+    # Aseguramos que los precios sean numéricos
+    items_con_precios['price'] = pd.to_numeric(items_con_precios['price'], errors='coerce')
     
     # Calculamos el dinero gastado (solo ítems no gratuitos)
     dinero_gastado = items_con_precios[items_con_precios['is_free'] == False]['price'].sum()
-
-    # Formateamos el dinero gastado con el símbolo de dólar
-    dinero_gastado_formateado = f"USD {dinero_gastado:,.2f}"
-
+    dinero_gastado_formateado = f"USD {dinero_gastado:,.2f}"  # Formato con símbolo de dólar
+    
     # Calculamos el total de ítems
     total_items = len(items_usuario)
     
     # Calculamos el porcentaje de recomendación
-    if len(reviews_usuario) > 0:
+    if not reviews_usuario.empty:
         porcentaje_recomendacion = (reviews_usuario['recommend'].sum() / len(reviews_usuario)) * 100
     else:
         porcentaje_recomendacion = 0  # Si no hay reseñas, el porcentaje es 0
@@ -113,7 +114,7 @@ def userdata(user_id: str, df_items: pd.DataFrame, df_reviews: pd.DataFrame, df_
         "Usuario": user_id,
         'Dinero gastado': dinero_gastado_formateado,
         'Porcentaje de recomendación': f"{porcentaje_recomendacion:.2f}%",
-        'cantidad de items': total_items
+        'Cantidad de items': total_items
     }
 
 
